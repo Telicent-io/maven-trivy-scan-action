@@ -30,7 +30,7 @@ jobs:
       - name: Maven Build
         run: |
           cd src/it/fixed-vulnerability
-          mvn clean install
+          mvn --batch-mode clean install
 
       - name: Maven Trivy Scan
         uses: Telicent-io/maven-trivy-scan-action@v1
@@ -52,7 +52,7 @@ jobs:
       - name: Maven Build
         run: |
           cd src/it/known-vulnerability
-          mvn clean install
+          mvn --batch-mode clean install
 
       - name: Maven Trivy Scan
         uses: Telicent-io/maven-trivy-scan-action@v1
