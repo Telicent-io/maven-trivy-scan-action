@@ -43,7 +43,7 @@ runs:
   using: "composite"
   steps:
     - name: Install Trivy CLI
-      if: ${{ inputs.skip-trivy-install == 'true' }}
+      if: ${{ inputs.skip-trivy-install != 'true' }}
       uses: jaxxstorm/action-install-gh-release@v1.12.0
       with:
         repo: aquasecurity/trivy
