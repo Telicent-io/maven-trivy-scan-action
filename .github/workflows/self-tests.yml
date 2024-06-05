@@ -56,7 +56,15 @@ jobs:
           mvn --batch-mode clean install
 
       - name: Maven Trivy Scan
+        id: trivy
+        continue-on-error: true
         uses: Telicent-io/maven-trivy-scan-action@v1
         with:
           pattern: "*-bom.json"
           directory: src/it/known-vulnerability
+
+      - name: Ensure Trivy Scan Step Failed
+        if: ${{ steps.trivy.outcome == 'success' }}
+        run: |
+          echo "Trivy Scanning Step DID NOT fail as expected"
+          exit 1
