@@ -1,0 +1,62 @@
+name: Action Self-Tests
+
+# Run workflow for any push to a branch
+on:
+  push:
+    branches:
+      - '**'
+    tags:
+      - '**'
+  workflow_dispatch:
+
+# Only permit one build per branch/tag
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: ${{ !contains(github.ref_name, 'release/') }}
+
+jobs:
+  passing-build:
+    name: Expected Success
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java and Maven
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Maven Build
+        run: |
+          cd tests/fixed-vulnerability
+          mvn clean install
+
+      - name: Maven Trivy Scan
+        uses: Telicent-io/maven-trivy-scan-action@v1
+        with:
+          pattern: "*-bom.json"
+
+  failing-build:
+    name: Expected Failure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java and Maven
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Maven Build
+        run: |
+          cd tests/known-vulnerability
+          mvn clean install
+
+      - name: Maven Trivy Scan
+        uses: Telicent-io/maven-trivy-scan-action@v1
+        with:
+          pattern: "*-bom.json"
