@@ -33,14 +33,23 @@ inputs:
       and controls what severity of vulnerability will fail the build.
 
       Defaults to `HIGH,CRITICAL`
+  skip-trivy-install:
+    required: false
+    default: "false"
+    description: |
+      Specifies, as true/false,  whether to skip the Trivy CLI install if your workflow installs 
+      it prior to calling this action.
 runs:
   using: "composite"
   steps:
     - name: Install Trivy CLI
+      if: ${{ inputs.skip-trivy-install == 'true' }}
       uses: jaxxstorm/action-install-gh-release@v1.12.0
       with:
         repo: aquasecurity/trivy
         arch: 64bit
+        tag: v0.52.0
+        cache: enable
 
     - name: Install Maven Trivy Scanning Script
       uses: jaxxstorm/action-install-gh-release@v1.12.0
@@ -48,6 +57,9 @@ runs:
         repo: telicent-io/maven-trivy-scan-action
         arch: noarch
         platform: any
+        tag: 0.1.3
+        cache: enable
+        
 
     - name: Scan Maven generated SBOMs with Trivy
       shell: bash
