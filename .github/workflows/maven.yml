@@ -16,17 +16,9 @@ concurrency:
 
 jobs:
   maven-build:
-    uses: Telicent-io/telicent-test/.github/workflows/maven.yml@main
+    uses: Telicent-oss/shared-workflows/.github/workflows/maven.yml@main
     with:
-      # No Docker based tests
-      USES_DOCKERHUB_IMAGES: false
-      USES_ECR_IMAGES: false
-      # No SNAPSHOTs
+      # No SNAPSHOT publishing
       PUBLISH_SNAPSHOTS: false
-      JAVA_VERSION: 21
-      RELEASE_FILES: 
-        target/*-distribution-*
+      RELEASE_FILES: "**/*-distribution-*"
     secrets: inherit
-
-
-
