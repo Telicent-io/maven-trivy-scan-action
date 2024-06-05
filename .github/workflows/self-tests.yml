@@ -29,7 +29,7 @@ jobs:
 
       - name: Maven Build
         run: |
-          cd tests/fixed-vulnerability
+          cd src/it/fixed-vulnerability
           mvn clean install
 
       - name: Maven Trivy Scan
@@ -51,7 +51,7 @@ jobs:
 
       - name: Maven Build
         run: |
-          cd tests/known-vulnerability
+          cd src/it/known-vulnerability
           mvn clean install
 
       - name: Maven Trivy Scan
