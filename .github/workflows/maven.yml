@@ -1,0 +1,32 @@
+name: Maven Build
+
+# Run workflow for any push to a branch
+on:
+  push:
+    branches:
+      - '**'
+    tags:
+      - '**'
+  workflow_dispatch:
+
+# Only permit one build per branch/tag
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: ${{ !contains(github.ref_name, 'release/') }}
+
+jobs:
+  maven-build:
+    uses: Telicent-io/telicent-test/.github/workflows/maven.yml@main
+    with:
+      # No Docker based tests
+      USES_DOCKERHUB_IMAGES: false
+      USES_ECR_IMAGES: false
+      # No SNAPSHOTs
+      PUBLISH_SNAPSHOTS: false
+      JAVA_VERSION: 21
+      RELEASE_FILES: 
+        target/*-distribution-*
+    secrets: inherit
+
+
+
