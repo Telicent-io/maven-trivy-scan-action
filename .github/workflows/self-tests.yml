@@ -55,7 +55,7 @@ jobs:
         if: always()
         uses: actions/download-artifact@v4
         with:
-          name: maven-trivy-sbom-scan-reports-${{ github.job }}
+          name: maven-trivy-sbom-scan-reports-${{ github.job }}-${{ matrix.os }}
           path: /tmp
 
   failing-build:
