@@ -167,13 +167,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
       # No Maven Build Steps so no SBOMs will be present
 
       - name: Maven Trivy Scan
         id: trivy
         continue-on-error: true
         uses: Telicent-io/maven-trivy-scan-action@v1
+
+      - name: Ensure Trivy Scan Step Failed
+        if: ${{ steps.trivy.outcome == 'success' }}
+        run: |
+          echo "Trivy Scanning Step DID NOT fail as expected"
+          exit 1
+
+  invalid-directory:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Maven Trivy Scan
+        id: trivy
+        continue-on-error: true
+        uses: Telicent-io/maven-trivy-scan-action@v1
+        with:
+          directory: /no/such/directory
 
       - name: Ensure Trivy Scan Step Failed
         if: ${{ steps.trivy.outcome == 'success' }}
