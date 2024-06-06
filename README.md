@@ -79,10 +79,13 @@ Note that the action will also fail in other circumstances:
   in a matrix build because it only keys the artifact name on the job name.  Unless your dependencies vary by your build
   matrix consider only running this action on one of the jobs within your matrix, or set the `suffix` input to a unique value per matrix job.
 
-## Artifacts
+## Artifacts
 
-This action uploads a build artifact named `maven-trivy-sbom-scan-results-<job-name>-<suffix>` to your build.  You can download
+This action uploads a build artifact named `maven-trivy-sbom-scan-results-<job-name><suffix>` to your build.  You can download
 this artifact to inspect the scan results if a build fails.
+
+The `<job-name>` comes from the `github.job` context variable which contains the name of your job, and the optional
+`<suffix>` comes from the `report-suffix` [input](#inputs) if configured.  A `report-suffix` **MUST** be configured if calling this action from a Matrix job otherwise the matrix jobs won't produce unique artifact names and some of them will fail as a result.
 
 [Trivy]: https://aquasecurity.github.io/trivy/v0.52/
 [TrivyAction]: https://github.com/aquasecurity/trivy-action
