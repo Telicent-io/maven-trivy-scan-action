@@ -59,10 +59,30 @@ The following inputs are supported by this action:
 
 | Input | Default | Purpose |
 |-------|---------|---------|
-| `directory` | `.` | Specifies the top level directory which will be scanned for Maven generated SBOMs |
-| `pattern` | `*-cyclonedx.json` | Specifies the filename search pattern used to locate Maven SBOMs |
-| `severities` | `HIGH,CRITICAL` | Specifies the Trivy vulnerability severities that are scanned for and will fail the build |
+| `directory` | `.` | Specifies the top level directory which will be scanned for Maven generated SBOMs. |
+| `pattern` | `*-cyclonedx.json` | Specifies the filename search pattern used to locate Maven SBOMs, set this if your build configuration generates SBOMs with different names. |
+| `severities` | `HIGH,CRITICAL` | Specifies the Trivy vulnerability severities that are scanned for and will fail the build. |
 | `skip-trivy-install` | `false` | When set to `true` skips the Trivy CLI installation and assumes you've already installed it on your runner, or in an earlier part of your workflow. |
+| `report-suffix` | | Sets an optional report name suffix that will be appended to the end of the artifact name, this can be useful if you are running a matrix job to ensure that the action generates a unique artifact name for each matrix job. |
+
+## Outputs
+
+This action does not produce any outputs currently.  It either succeeds if no violations were detected, or fails if
+violations were detected.
+
+Note that the action will also fail in other circumstances:
+
+- It's unable to install the required tooling, or you told it not to and failed to provide that tooling yourself
+- The provided `directory` does not contain a `pom.xml` file
+- No SBOMs are detected within the configured `directory`
+- If failed to upload the scan results because the artifact name was not unique.  This can happen if this action is used
+  in a matrix build because it only keys the artifact name on the job name.  Unless your dependencies vary by your build
+  matrix consider only running this action on one of the jobs within your matrix, or set the `suffix` input to a unique value per matrix job.
+
+## Artifacts
+
+This action uploads a build artifact named `maven-trivy-sbom-scan-results-<job-name>-<suffix>` to your build.  You can download
+this artifact to inspect the scan results if a build fails.
 
 [Trivy]: https://aquasecurity.github.io/trivy/v0.52/
 [TrivyAction]: https://github.com/aquasecurity/trivy-action

@@ -39,6 +39,15 @@ inputs:
     description: |
       Specifies, as true/false,  whether to skip the Trivy CLI install if your workflow installs 
       it prior to calling this action.
+  report-suffix:
+    required: false
+    default: ""
+    description: |
+      Specifies an optional report naming suffix that will be appended to the Scan Reports Artifact 
+      uploaded by this action.
+
+      This is generally only needed when running a matrix job as the artifact is only keyed by the job
+      ID which won't be unique for matrix jobs.
 runs:
   using: "composite"
   steps:
@@ -70,7 +79,7 @@ runs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: maven-trivy-sbom-scan-reports-${{ github.job }}
+        name: maven-trivy-sbom-scan-reports-${{ github.job }}${{ inputs.report-suffix }}
         path: |
           **/*-trivy-report.json
           **/target/maven-trivy-summary.txt

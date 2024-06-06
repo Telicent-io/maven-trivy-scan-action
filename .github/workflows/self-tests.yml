@@ -16,7 +16,10 @@ concurrency:
 
 jobs:
   passing-build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,6 +43,7 @@ jobs:
         with:
           pattern: "*-bom.json"
           directory: src/it/fixed-vulnerability
+          report-suffix: "-${{ matrix.os }}"
 
       - name: Ensure Trivy Scan Step Succeeded
         if: ${{ steps.trivy.outcome != 'success' }}
