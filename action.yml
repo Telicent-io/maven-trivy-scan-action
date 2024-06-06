@@ -66,3 +66,20 @@ runs:
       run: |
         maven-trivy-scan.sh ${{ inputs.directory }} ${{ inputs.pattern }} ${{ inputs.severities }}
 
+    - name: Attach Scan Reports to Build
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: maven-trivy-sbom-scan-reports-${{ github.job }}
+        path: "**/*-trivy-report.json"
+        # Note that reports are only produced for modules with violations
+        if-no-files-found: ignore
+
+    - name: Attach Scan Summary to Build
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: maven-trivy-sbom-scan-summary-${{ github.job }}
+        path: "**/target/maven-trivy-summary.txt"
+        # Should ALWAYS be a summary file present even if no violations found
+        if-no-files-found: error
