@@ -26,6 +26,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
+          cache: maven
 
       - name: Maven Build
         run: |
@@ -57,6 +58,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
+          cache: maven
 
       - name: Maven Build
         run: |
