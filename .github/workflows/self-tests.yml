@@ -146,6 +146,9 @@ jobs:
   no-pom:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Maven Trivy Scan
         id: trivy
         continue-on-error: true
@@ -162,6 +165,9 @@ jobs:
   no-sboms:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
       # No Maven Build Steps so no SBOMs will be present
 
       - name: Maven Trivy Scan

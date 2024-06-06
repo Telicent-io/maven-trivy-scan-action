@@ -16,7 +16,7 @@ echo "Trivy Vulnerability severities are ${SEVERITIES}"
 echo ""
 
 if [ ! -f pom.xml ]; then
-  echo "No Maven project found in current directory"
+  echo "No Maven project found in current directory $(pwd)"
   ls -lh
   exit 1
 fi
