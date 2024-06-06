@@ -4,7 +4,12 @@ DIRECTORY=$1
 SBOM_PATTERN=${2:-*-cyclonedx.json}
 SEVERITIES=${3:-HIGH,CRITICAL}
 
-pushd "${DIRECTORY}" || (echo "Directory was not configured correctly" && exit 1)
+function abort() {
+  echo "$*"
+  exit 1
+}
+
+pushd "${DIRECTORY}" || abort "Directory was not configured correctly"
 echo "Scanning for SBOMs in Directory $(pwd)..."
 echo "SBOM filename search pattern is ${SBOM_PATTERN}"
 echo "Trivy Vulnerability severities are ${SEVERITIES}"
