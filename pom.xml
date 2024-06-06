@@ -37,6 +37,24 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.cyclonedx</groupId>
+                <artifactId>cyclonedx-maven-plugin</artifactId>
+                <version>2.8.0</version>
+                <executions>
+                    <execution>
+                        <id>build-sbom-cyclonedx</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>makeAggregateBom</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <outputName>${project.artifactId}-bom</outputName>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
