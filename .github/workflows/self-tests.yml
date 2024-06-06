@@ -47,6 +47,13 @@ jobs:
           echo "Trivy Scanning Step failed unexpectedly"
           exit 1
 
+      - name: Ensure Scan Reports were uploaded
+        if: always()
+        uses: actions/download-artifact@v4
+        with:
+          name: maven-trivy-sbom-scan-reports-${{ github.job }}
+          path: /tmp
+
   failing-build:
     runs-on: ubuntu-latest
     steps:
@@ -78,3 +85,10 @@ jobs:
         run: |
           echo "Trivy Scanning Step DID NOT fail as expected"
           exit 1
+
+      - name: Ensure Scan Reports were uploaded
+        if: always()
+        uses: actions/download-artifact@v4
+        with:
+          name: maven-trivy-sbom-scan-reports-${{ github.job }}
+          path: /tmp
