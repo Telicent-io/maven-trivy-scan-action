@@ -5,11 +5,13 @@ resulting JSON report files as GitHub build artifacts
 
 While there is a general purpose [Trivy GitHub Action][TrivyAction] testing has shown that this isn't reliable in
 actually detecting vulnerabilities.  Using a `scan-type` of `fs` finds the `pom.xml` files but doesn't seem to properly
-process them for vulnerability detection.
+process them for vulnerability detection in all cases.  For example, it can fail to detect vulnerable dependencies if
+these are transitive dependencies of private dependencies (i.e. those not in Maven Central), and more generally where
+the vulnerable dependency is transitive.  By scanning the actual SBOM generated from the Maven build we can guarantee
+that we have a complete bill of materials to scan, and get much more accurate vulnerability scanning results.
 
 This action basically searches the filesystem for the actual SBOMs (produced by the [Maven CycloneDX
-Plugin][MavenCycloneDX] or another method) and then individually runs Trivy against each of those files.  This seems to
-then reliably report any vulnerabilities.
+Plugin][MavenCycloneDX] or another method) and then individually runs Trivy against each of those files. 
 
 # Requirements
 
@@ -18,7 +20,7 @@ then reliably report any vulnerabilities.
   **MUST** happen prior to calling this action and generate SBOMs within the `target/` directories of your module(s).
 - Since this action loops on a filesystem search we have to call the Trivy CLI directly rather than via the
   [Action][TrivyAction], thus it needs to install Trivy.  If your workflow that calls this action already has Trivy
-  installed then you can use the action inputs to skip that installation.
+  installed then you can set the action input `skip-trivy-install` to `true` to skip that installation.
 
 # Usage
 
@@ -60,6 +62,7 @@ The following inputs are supported by this action:
 | `directory` | `.` | Specifies the top level directory which will be scanned for Maven generated SBOMs |
 | `pattern` | `*-cyclonedx.json` | Specifies the filename search pattern used to locate Maven SBOMs |
 | `severities` | `HIGH,CRITICAL` | Specifies the Trivy vulnerability severities that are scanned for and will fail the build |
+| `skip-trivy-install` | `false` | When set to `true` skips the Trivy CLI installation and assumes you've already installed it on your runner, or in an earlier part of your workflow. |
 
 [Trivy]: https://aquasecurity.github.io/trivy/v0.52/
 [TrivyAction]: https://github.com/aquasecurity/trivy-action
