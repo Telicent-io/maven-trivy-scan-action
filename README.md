@@ -1,3 +1,7 @@
+# ARCHIVED
+
+As Trivy and the Trivy Action has improved this has been rendered unncessary.
+
 # Maven Trivy Scan Action
 
 This repository provides a GitHub Action that performs a vulnerability scan using [Trivy][Trivy] and uploads the
